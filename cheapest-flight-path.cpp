@@ -1,4 +1,43 @@
 //https://neetcode.io/problems/cheapest-flight-path
+
+class Solution {
+public:
+    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
+        unordered_map<int, vector<pair<int, int>>> m_path;
+        for(int i=0; i<flights.size(); i++){
+            m_path[flights[i][0]].push_back({flights[i][1], flights[i][2]});
+        }
+
+        vector<int> price(n, INT_MAX);
+        price[src] = 0;
+        queue<int> q;
+        q.push(src);
+
+        int count = 0;
+        while(!q.empty() && count <= k){
+            int size = q.size();
+            count++;
+            while(size--){
+                src = q.front();
+                q.pop();
+                for(auto p: m_path[src]){
+                    int nextCost = price[src] + p.second;
+                    if(price[p.first] > nextCost){
+                        price[p.first] = nextCost;
+                        q.push(p.first);
+                    }
+                }
+            }
+        }
+
+        if(price[dst] == INT_MAX)
+            return -1;
+        return price[dst];
+    }
+};
+
+
+
 // 2
 // [[0,1,2880]]
 // 1
